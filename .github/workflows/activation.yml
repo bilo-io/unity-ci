@@ -1,0 +1,27 @@
+# Ref: https://unity-ci.com/docs/github/activation
+name: Unity License Activation
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  activation:
+    name: Request Unity Activation
+    runs-on: ubuntu-latest
+    steps:
+    # Request manual activation file
+      - name: Request Manual Activation File
+        id: getManualLicenseFile
+        uses: webbertakken/unity-request-manual-activation-file@v1.1
+        with:
+          unityVersion: 2019.4.2f1
+      # Upload artifact (Unity_v20XX.X.XXXX.alf)
+      - name: Expose as artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: ${{ steps.getManualLicenseFile.outputs.filePath }}
+          path: ${{ steps.getManualLicenseFile.outputs.filePath }}
+
