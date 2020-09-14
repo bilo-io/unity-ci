@@ -5,14 +5,14 @@ on:
   push:
     branches: [ master ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, develop ]
 
 jobs:
   activation:
     name: Request Unity Activation
     runs-on: ubuntu-latest
     steps:
-    # Request manual activation file
+      # Request manual activation file
       - name: Request Manual Activation File
         id: getManualLicenseFile
         uses: webbertakken/unity-request-manual-activation-file@v1.1
