@@ -62,18 +62,18 @@ jobs:
           name: Build
           path: build
 
-  deploy_server:
-    runs-on: ubuntu-latest
-    needs: [build_unity, build]
-    name: Build Server and Deploy
-    steps:
-      - name: 'Create Node.js Server'
-        run: bash scripts/setup-server.sh
-        # if: contains(github.ref, "release")
-      - name: 'Deploy to Azure WebApp'
-        uses: azure/webapps-deploy@v2
-        if: ${{ github.ref == 'ref/head/master' }}
-        with:
-          app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+  # deploy_server:
+  #   runs-on: ubuntu-latest
+  #   needs: [build_unity, build]
+  #   name: Build Server and Deploy
+  #   steps:
+  #     - name: 'Create Node.js Server'
+  #       run: bash scripts/setup-server.sh
+  #       # if: contains(github.ref, "release")
+  #     - name: 'Deploy to Azure WebApp'
+  #       uses: azure/webapps-deploy@v2
+  #       if: ${{ github.ref == 'ref/head/master' }}
+  #       with:
+  #         app-name: ${{ env.AZURE_WEBAPP_NAME }}
+  #         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+  #         package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
