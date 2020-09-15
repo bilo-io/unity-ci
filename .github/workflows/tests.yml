@@ -1,4 +1,4 @@
-name: Test
+name: TESTS
 
 on:
   pull_request: { branches: [master] }
@@ -9,7 +9,7 @@ env:
 
 jobs:
   testAllModes:
-    name: Test in ${{ matrix.testMode }} on version ${{ matrix.unityVersion }}
+    name: Test ${{ matrix.testMode }} - Unity v${{ matrix.unityVersion }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false

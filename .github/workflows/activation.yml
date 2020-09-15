@@ -1,5 +1,5 @@
 # Ref: https://unity-ci.com/docs/github/activation
-name: Unity License Activation
+name: LICENSE
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
 
 jobs:
   activation:
-    name: Request Unity Activation
+    name: Unity License Activation
     runs-on: ubuntu-latest
     steps:
       # Request manual activation file

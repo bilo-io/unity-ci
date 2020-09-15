@@ -1,4 +1,4 @@
-name: Build project
+name: BUILD
 
 on:
   pull_request: { branches: [master] }
