@@ -7,6 +7,8 @@
 /[Oo]bj/
 /[Bb]uild/
 /[Bb]uilds/
+/[Dd]ist/
+/[Pp]ublic/
 /[Ll]ogs/
 /[Mm]emoryCaptures/
 WebGLBuild/
