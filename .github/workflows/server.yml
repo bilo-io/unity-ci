@@ -1,0 +1,13 @@
+name: BUILD / Node.js Server for WebGL
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  create_node_folder:
+    runs-on: ubuntu-latest
+    steps:
+      - run: bash scripts/build-webgl.sh
