@@ -67,8 +67,10 @@ jobs:
     needs: [build_unity]
     name: Build Server and Deploy
     steps:
+      - name: 'Show contents'
+        run: ls -la
       - name: 'Create Node.js Server'
-        run: bash scripts/setup-server.sh
+        run: bash ./scripts/setup-server.sh
         # if: contains(github.ref, "release")
       - name: 'Deploy to Azure WebApp'
         uses: azure/webapps-deploy@v2
