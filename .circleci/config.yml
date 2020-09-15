@@ -1,18 +1,8 @@
 version: 2.1
-executors:
-  unity:
-    docker:
-      # https://hub.docker.com/r/gableroux/unity3d/tags
-      - image: gableroux/unity3d:2018.3.11f1
 jobs:
-  build-test:
-    executor: unity
-    steps:
-      - checkout
-      - run: openssl aes-256-cbc -d -in .circleci/Unity_v2018.x.ulf-cipher -k ${CIPHER_KEY} >> .circleci/Unity_v2018.x.ulf
-      - run: /opt/Unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -manualLicenseFile .circleci/Unity_v2018.x.ulf || exit 0
-workflows:
-  version: 2
   build:
-    jobs:
-      - build-test
+    docker:
+      - image: circleci/node:4.8.2 # the primary container, where your job's commands are run
+    steps:
+      - checkout # check out the code in the project directory
+      - run: echo "hello world" # run the `echo` command
