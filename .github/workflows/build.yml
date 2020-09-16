@@ -71,9 +71,15 @@ jobs:
       - name: 'Show contents'
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: ls -la
+      - name: 'Prepare Setup Script'
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: chmod +x ./scripts/setup-server.sh
       - name: 'Create Node.js Server'
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: bash ./scripts/setup-server.sh
+        with:
+          name: Build Server
+          path: WebGLBuild
         # if: contains(github.ref, "release")
       - name: 'Deploy to Azure WebApp'
         uses: azure/webapps-deploy@v2
