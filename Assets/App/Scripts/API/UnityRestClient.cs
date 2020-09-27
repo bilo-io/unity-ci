@@ -58,6 +58,7 @@ public class UnityRestClient : MonoBehaviour
         using (UnityWebRequest request = UnityWebRequest.Get(uri))
         {
             yield return request.SendWebRequest();
+
             if (request.isNetworkError)
             {
                 Debug.Log($"<color=red>({request.responseCode}) => API.ERROR</color=cyan>\n{request.error}");
