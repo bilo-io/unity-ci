@@ -132,11 +132,11 @@ jobs:
       outputPath: '$(Build.BinariesDirectory)'
 
   # Publish the Solution folder:
-  - task: PublishPipelineArtifact@0
-    displayName: 'Publish Pipeline Artifact'
-    inputs:
-      artifactName: 'sln'
-      targetPath: '$(unity.projectPath)$(unity.outputPath)'
+  # - task: PublishPipelineArtifact@0
+  #   displayName: 'Publish Pipeline Artifact'
+  #   inputs:
+  #     artifactName: 'sln'
+  #     targetPath: '$(unity.projectPath)$(unity.outputPath)'
 
 
 # Until we have a Unity serial key management system, the unity and slnbuild jobs can be merged for speed.
@@ -209,11 +209,11 @@ jobs:
       msbuildArguments: '/p:AppxBundle=Always /p:AppxBundlePlatforms="$(vs.appxPlatforms)"'
 
   # Publish the package (.appxbundle/.msixbundle) that we just built:
-  - task: PublishPipelineArtifact@0
-    displayName: 'Publish Pipeline Artifact'
-    inputs:
-      artifactName: 'apppackages'
-      targetPath: '$(unity.projectPath)$(unity.outputPath)$(vs.packagePath)'  # Change to '$(unity.projectPath)$(unity.outputPath)$(vs.packagePath)' to resume two jobs
+  # - task: PublishPipelineArtifact@0
+  #   displayName: 'Publish Pipeline Artifact'
+  #   inputs:
+  #     artifactName: 'apppackages'
+  #     targetPath: '$(unity.projectPath)$(unity.outputPath)$(vs.packagePath)'  # Change to '$(unity.projectPath)$(unity.outputPath)$(vs.packagePath)' to resume two jobs
 
 
 # Build the Visual Studio solution generated from the previous job and create a package.
