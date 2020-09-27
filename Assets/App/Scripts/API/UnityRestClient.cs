@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Networking;
 
 using Newtonsoft.Json;
@@ -11,16 +12,44 @@ using Newtonsoft.Json;
 public class UnityRestClient : MonoBehaviour
 {
     // Start is called before the first frame update
+    [SerializeField]
+    private string[] APIData = new string[4];
+    [SerializeField]
+    // private GameObject apiFeedbackLabel;
+    // private TextMeshPro tmp;
     void Start()
     {
-        string id = "5f70bdd8b5ca1152aaa366d4";
+        string id = "5f70e753d3aa607f41fa6523";
         string apiUrl = "http://localhost:4000/api/todos";
 
-        string sampleData = "{ \"name\": \"UnityWebRequest_Test2\", \"description\": \"Testing UnityWebRequest_Test\", \"status\": \"todo\" }";
-        // StartCoroutine(GetRequest(apiUrl));
-        // StartCoroutine(PostRequest(apiUrl, sampleData));
-        // StartCoroutine(PutRequest($"{apiUrl}/{id}", sampleData));
+
+        string sampleData = "{ \"name\": \"UnityWebRequest_Test\", \"description\": \"Testing UnityWebRequest_Test\", \"status\": \"todo\" }";
+        StartCoroutine(GetRequest(apiUrl));
+        StartCoroutine(PostRequest(apiUrl, sampleData));
+        StartCoroutine(PutRequest($"{apiUrl}/{id}", sampleData));
         // StartCoroutine(DeleteRequest($"{apiUrl}/{id}"));
+    }
+
+    private void Update()
+    {
+        // var textData = "";
+        // for (int i = 0; i < APIData.Length; i++)
+        // {
+        //     textData += $"\n{APIData[i]}";
+        // }
+        // tmp.SetText(textData);
+    }
+
+    void OnGUI()
+    {
+        var textData = "";
+        var style = new GUIStyle();
+        style.fontSize = 32;
+        for (int i = 0; i < APIData.Length; i++)
+        {
+            textData += $"\n{APIData[i]}";
+        }
+        GUI.Label(new Rect(0, 0, Screen.width, Screen.height), textData, style);
     }
 
     IEnumerator GetRequest(string uri)
@@ -32,11 +61,13 @@ public class UnityRestClient : MonoBehaviour
             if (request.isNetworkError)
             {
                 Debug.Log($"<color=red>({request.responseCode}) => API.ERROR</color=cyan>\n{request.error}");
+                APIData[0] = $"GET => error ({request.responseCode})";
             }
             else
             {
                 var json = request.downloadHandler.text;
                 Debug.Log($"<color=#44FF90>({request.responseCode}) => API.SUCCESS</color>\n{json}");
+                APIData[0] = $"GET => success ({request.responseCode}) => {json}";
             }
         }
     }
@@ -57,11 +88,13 @@ public class UnityRestClient : MonoBehaviour
             if (request.isNetworkError)
             {
                 Debug.Log($"<color=red>({request.responseCode}) => API.ERROR</color>");
+                APIData[1] = $"POST => error ({request.responseCode})";
             }
             else
             {
-              var json = request.downloadHandler.text;
+                var json = request.downloadHandler.text;
                 Debug.Log($"<color=#44FF90>({request.responseCode}) => API.SUCCESS</color>\n{json}");
+                APIData[1] = $"POST => success ({request.responseCode})";
             }
         }
     }
@@ -82,18 +115,21 @@ public class UnityRestClient : MonoBehaviour
             if (request.isNetworkError)
             {
                 Debug.Log($"<color=red>({request.responseCode}) => API.ERROR</color> {request.error}");
+                APIData[2] = $"PUT => error ({request.responseCode}) => {request.error}";
             }
             else
             {
                 var json = request.downloadHandler.text;
 
-                if(request.responseCode < 400)
+                if (request.responseCode < 400)
                 {
                     Debug.Log($"<color=#44FF90>({request.responseCode}) => API.SUCCESS</color>\n{json}");
+                    APIData[2] = $"PUT => success ({request.responseCode}) => {json}";
                 }
                 else
                 {
                     Debug.Log($"<color=red>({request.responseCode}) => API.ERROR</color> {request.error}");
+                    APIData[2] = $"PUT => error ({request.responseCode}) => {request.error}";
                 }
             }
         }
@@ -109,18 +145,21 @@ public class UnityRestClient : MonoBehaviour
             if (request.isNetworkError)
             {
                 Debug.Log($"<color=red>({request.responseCode}) => API.ERROR</color>\n{request.error}");
+                APIData[3] = $"DELETE => error ({request.responseCode}) => {request.error}";
             }
             else
             {
                 // var json = request.downloadHandler.text;
 
-                if(request.responseCode < 400)
+                if (request.responseCode < 400)
                 {
                     Debug.Log($"<color=#44FF90>({request.responseCode}) => API.SUCCESS</color>");
+                    APIData[3] = $"DELETE => success ({request.responseCode})";
                 }
                 else
                 {
                     Debug.Log($"<color=red>({request.responseCode}) => API.ERROR</color> {request.error}");
+                    APIData[3] = $"DELETE => error ({request.responseCode}) => {request.error}";
                 }
             }
         }
