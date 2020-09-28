@@ -1,15 +1,23 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 
 using UnityEngine;
 using UnityEngine.Networking;
 
 using Newtonsoft.Json;
+// using Fuzzy.Extensions;
+// NOTE: get description extension method is in Fuzzy.Extensions
 
-public class ApiClient : IRestClient
+public class ApiClient //: IRestClient
 {
+  public enum ContentType
+  {
+    // [Decription("application/json")]
+    JSON
+  }
     #region HELPERS
     internal static string requestError(UnityWebRequest request)
     {
@@ -72,8 +80,10 @@ public class ApiClient : IRestClient
                 request.method = UnityWebRequest.kHttpVerbPOST;
                 request.downloadHandler = new DownloadHandlerBuffer();
                 request.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(data));
-                request.SetRequestHeader("Content-Type", API.CONTENT_TYPE_JSON);
-                request.SetRequestHeader("Accept", API.CONTENT_TYPE_JSON);
+                // request.SetRequestHeader("Content-Type", Enumerations.GetDescription((ContentType)ContentType.JSON));
+                // request.SetRequestHeader("Accept", Enumerations.GetDescription((ContentType)ContentType.JSON));
+                request.SetRequestHeader("Content-Type", "application/json");
+                request.SetRequestHeader("Accept", "application/json");
 
                 yield return request.SendWebRequest();
                 done?.Invoke(request);
@@ -87,8 +97,10 @@ public class ApiClient : IRestClient
                 request.method = UnityWebRequest.kHttpVerbPOST;
                 request.downloadHandler = new DownloadHandlerBuffer();
                 request.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(data));
-                request.SetRequestHeader("Content-Type", API.CONTENT_TYPE_JSON);
-                request.SetRequestHeader("Accept", API.CONTENT_TYPE_JSON);
+                // request.SetRequestHeader("Content-Type", Enumerations.GetDescription((ContentType)ContentType.JSON));
+                // request.SetRequestHeader("Accept", Enumerations.GetDescription((ContentType)ContentType.JSON));
+                request.SetRequestHeader("Content-Type", "application/json");
+                request.SetRequestHeader("Accept", "application/json");
 
                 yield return request.SendWebRequest();
                 done?.Invoke(request);

@@ -8,18 +8,12 @@ public interface IRestClient
     #region PUBLIC API
     T DeserializeContent<T>(Stream stream);
     string GetResourceUrl(string resource);
-
     Task<T> GetAsync<T>(string resource, string authToken = null, Header[] headers = null);
-
     Task<HttpResponseMessage> GetAsync(string resource, string authToken = null, Header[] headers = null);
     Task<T> PostAsync<T>(string resource, object content, string authToken = null, Header[] headers = null);
-
     Task<HttpResponseMessage> PostAsync(string resource, object content, string authToken = null, Header[] headers = null);
-
     Task<T> PutAsync<T>(string resource, object content, string authToken = null, Header[] headers = null);
-
     Task<HttpResponseMessage> PutAsync(string resource, object content, string authToken = null, Header[] headers = null);
-
     Task<HttpResponseMessage> DeleteAsync(string resource, string authToken = null, Header[] headers = null);
     #endregion
 
