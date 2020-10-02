@@ -13,13 +13,36 @@ using Newtonsoft.Json;
 
 public class ApiClient //: IRestClient
 {
-  public enum ContentType
-  {
-    // [Decription("application/json")]
-    JSON
-  }
+    #region TYPES
+    public class Header
+    {
+        public string name { get; set; }
+        public string value { get; set; }
+
+        public override string ToString()
+            => $"{name}: {value}";
+    }
+
+    public enum ContentType
+    {
+        // [Decription("application/json")]
+        JSON
+    }
+    #endregion
+
+    #region PROPERTIES
+    public static bool logOutput { get; set; }
+    // public static TimeSpan timeout { get => ApiClient.timeout; set => client.Timeout = value; }
+    #endregion
+
+      #region VARIABLES
+		private string responseTypeColor = "#5ee5e5";
+		private string responseSuccessColor = "#39e564";
+		private string responseErrorColor = "#e0370d";
+		#endregion
+
     #region HELPERS
-    internal static string requestError(UnityWebRequest request)
+    public static string requestError(UnityWebRequest request)
     {
         string responseBody = string.Empty;
         if (request.downloadHandler != null)
@@ -31,7 +54,7 @@ public class ApiClient //: IRestClient
         return errorMessage;
     }
 
-    internal static T requestResponse<T>(UnityWebRequest request)
+    public static T requestResponse<T>(UnityWebRequest request)
     {
         try
         {
@@ -47,7 +70,7 @@ public class ApiClient //: IRestClient
     }
     #endregion
 
-    internal static IEnumerator Request(string url, string method, string data = null, Action<UnityWebRequest> done = null)
+    public static IEnumerator Request(string url, string method, string data = null, Action<UnityWebRequest> done = null)
     {
         Debug.Log($"<color=yellow>{method}</color> =>: <color=blue>{url}</color>");
         UnityWebRequest request;
@@ -108,13 +131,13 @@ public class ApiClient //: IRestClient
         }
     }
 
-    internal static IEnumerator Post(string url, object o, Action<UnityWebRequest> done = null) =>
+    public static IEnumerator Post(string url, object o, Action<UnityWebRequest> done = null) =>
         Request(url, UnityWebRequest.kHttpVerbPOST, JsonConvert.SerializeObject(o), done);
 
-    internal static IEnumerator Get(string url, Action<UnityWebRequest> done = null) =>
+    public static IEnumerator Get(string url, Action<UnityWebRequest> done = null) =>
         Request(url, UnityWebRequest.kHttpVerbGET, null, done);
 
-    internal static Action<T1, T2> wrapCallback<T1, T2>(Action<T1, T2> doneCallback)
+    public static Action<T1, T2> wrapCallback<T1, T2>(Action<T1, T2> doneCallback)
     {
         // NOTE:
         // in case of having missing done callback use empty function to skip checks

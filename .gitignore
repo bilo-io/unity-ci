@@ -11,7 +11,7 @@
 /[Pp]ublic/
 /[Ll]ogs/
 /[Mm]emoryCaptures/
-WebGLBuild/
+WebGLBuild*/
 
 # Asset meta data should only be ignored when the corresponding asset is also ignored
 !/[Aa]ssets/**/*.meta
