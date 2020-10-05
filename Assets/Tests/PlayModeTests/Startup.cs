@@ -24,5 +24,18 @@ namespace Tests
             // Use yield to skip a frame.
             yield return null;
         }
+
+        [UnityTest]
+        public IEnumerator GameObject_WithRigidBody_WillBeAffectedByPhysics()
+        {
+            var go = new GameObject();
+            go.AddComponent<Rigidbody>();
+            var originalPosition = go.transform.position.y;
+
+            yield return new WaitForFixedUpdate();
+
+            Assert.AreNotEqual(originalPosition, go.transform.position.y);
+        }
+
     }
 }

@@ -13,9 +13,10 @@ on:
 # 2. Change these variables for your configuration:
 env:
   AZURE_WEBAPP_NAME: unity-ci    # set this to your application's name
-  AZURE_WEBAPP_PACKAGE_PATH: '.'      # set this to the path to your web app project, defaults to the repository root
+  AZURE_WEBAPP_PACKAGE_PATH: './WebGLBuild'      # set this to the path to your web app project, defaults to the repository root
   NODE_VERSION: '10.x'                # set this to the node version to use
   UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+  WORKING_DIRECTORY: .
 
 jobs:
   build_unity:
@@ -68,12 +69,23 @@ jobs:
     name: Build Server and Deploy
     steps:
       - name: 'Show contents'
-        uses: ./
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ github.repository }}
+        working-directory: ${{ env.WORKING_DIRECTORY }}
         run: ls -la
+      - name: 'Prepare Setup Script'
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ github.repository }}
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: chmod +x ./scripts/setup-server.sh
       - name: 'Create Node.js Server'
-        uses: ./
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ github.repository }}
+        working-directory: ${{ env.WORKING_DIRECTORY }}
         run: bash ./scripts/setup-server.sh
-        # if: contains(github.ref, "release")
       - name: 'Deploy to Azure WebApp'
         uses: azure/webapps-deploy@v2
         with:
