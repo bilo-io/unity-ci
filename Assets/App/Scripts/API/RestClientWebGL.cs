@@ -43,103 +43,75 @@ namespace UnityCI.API
         public static string GetResourceUrl(string resource)
           => $"{endPoint}/{resource}";
 
-        public static IEnumerator GetAsync<T>(string resource, string authToken, Action<UnityWebRequest> callback = null, Header[] headers = null)
-            => Request(resource, UnityWebRequest.kHttpVerbGET, authToken, null, callback, headers);
+        public static IEnumerator GetAsync<T>(string resource, string authToken = null, Action<UnityWebRequest> callback = null, Header[] headers = null)
+          => Rest("GET", GetResourceUrl(resource), null, authToken, callback, headers);
 
         public static IEnumerator PostAsync<T>(string resource, object content, string authToken, Action<UnityWebRequest> callback = null, Header[] headers = null)
-            => Request(resource, UnityWebRequest.kHttpVerbPOST, authToken, JsonConvert.SerializeObject(content), callback, headers);
+          => Rest("POST", GetResourceUrl(resource), content, authToken, callback, headers);
 
         public static IEnumerator PutAsync<T>(string resource, object content, string authToken, Action<UnityWebRequest> callback = null, Header[] headers = null)
-            => Request(resource, UnityWebRequest.kHttpVerbPUT, authToken, JsonConvert.SerializeObject(content), callback, headers);
+          => Rest("PUT", GetResourceUrl(resource), content, authToken, callback, headers);
 
         public static IEnumerator DeleteAsync<T>(string resource, string authToken, Action<UnityWebRequest> callback = null, Header[] headers = null)
-            => Request(resource, UnityWebRequest.kHttpVerbDELETE, authToken, null, callback, headers);
+          => Rest("DELETE", GetResourceUrl(resource), null, authToken, callback, headers);
+        #endregion
 
-        public static IEnumerator Request(string resource, string method, string authToken, string data = null, Action<UnityWebRequest> callback = null, Header[] headers = null)
+        #region TODO - DRY UP
+
+        static IEnumerator Rest(string method, string uri, object data = null, string authToken = null, Action<UnityWebRequest> callback = null, Header[] headers = null)
         {
-            var url = GetResourceUrl(resource);
-            Debug.Log($"<color=yellow>{method}</color> =>: <color=blue>{url}</color>");
-            UnityWebRequest request;
-
-            switch (method)
+            Debug.Log($"<color=yellow>{method}</color> {uri}");
+            switch (method.ToUpper())
             {
-                // -----------------------------------
-                // GET
-                case UnityWebRequest.kHttpVerbGET:
-                    request = UnityWebRequest.Get(url);
-                    if (!string.IsNullOrEmpty(authToken))
+                case "GET":
+                    using (UnityWebRequest request = UnityWebRequest.Get(uri))
                     {
-                        request.SetRequestHeader("Authorization", $"Bearer {authToken}");
+                        yield return request.SendWebRequest();
+                        callback?.Invoke(request);
                     }
-
-                    yield return request.SendWebRequest();
-                    callback?.Invoke(request);
                     break;
 
-                // -----------------------------------
-                // DELETE
-                case UnityWebRequest.kHttpVerbDELETE:
-                    request = UnityWebRequest.Delete(url);
-                    if (!string.IsNullOrEmpty(authToken))
+                case "POST":
+                    using (UnityWebRequest request = UnityWebRequest.Post(uri, data.ToString()))
                     {
-                        request.SetRequestHeader("Authorization", $"Bearer {authToken}");
-                    }
+                        request.method = UnityWebRequest.kHttpVerbPOST;
+                        request.downloadHandler = new DownloadHandlerBuffer();
+                        request.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(data.ToString()));
 
-                    yield return request.SendWebRequest();
-                    callback?.Invoke(request);
+                        request.SetRequestHeader("Content-Type", "application/json");
+                        request.SetRequestHeader("Accept", "application/json");
+                        // if (headers != null && headers.Length > 0)
+                        // {
+                        //     foreach (Header header in headers)
+                        //     {
+                        //         request.SetRequestHeader(header.name, header.value);
+                        //     }
+                        // }
+                        yield return request.SendWebRequest();
+                        callback?.Invoke(request);
+                    }
                     break;
 
-                // -----------------------------------
-                // POST
-                case UnityWebRequest.kHttpVerbPOST:
-                    request = UnityWebRequest.Post(url, data);
-
-                    request.method = UnityWebRequest.kHttpVerbPOST;
-                    request.downloadHandler = new DownloadHandlerBuffer();
-                    request.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(data));
-                    // if (headers != null && headers.Length > 0)
-                    // {
-                    //     foreach (Header header in headers)
-                    //     {
-                    //         request.SetRequestHeader(header.name, header.value);
-                    //     }
-                    // }
-                    request.SetRequestHeader("Content-Type", "application/json");
-                    request.SetRequestHeader("Accept", "application/json");
-
-                    if (!string.IsNullOrEmpty(authToken))
+                case "PUT":
+                    using (UnityWebRequest request = UnityWebRequest.Put(uri, data.ToString()))
                     {
-                        request.SetRequestHeader("Authorization", $"Bearer {authToken}");
-                    }
+                        request.method = UnityWebRequest.kHttpVerbPUT;
+                        request.downloadHandler = new DownloadHandlerBuffer();
+                        request.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(data.ToString()));
 
-                    yield return request.SendWebRequest();
-                    callback?.Invoke(request);
+                        request.SetRequestHeader("Content-Type", "application/json");
+                        request.SetRequestHeader("Accept", "application/json");
+                        yield return request.SendWebRequest();
+                        callback?.Invoke(request);
+                    }
                     break;
 
-                // -----------------------------------
-                // PUT
-                case UnityWebRequest.kHttpVerbPUT:
-                    request = UnityWebRequest.Put(url, data);
-
-                    request.method = UnityWebRequest.kHttpVerbPUT;
-                    request.downloadHandler = new DownloadHandlerBuffer();
-                    request.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(data));
-                    // if (headers != null && headers.Length > 0)
-                    // {
-                    //     foreach (Header header in headers)
-                    //     {
-                    //         request.SetRequestHeader(header.name, header.value);
-                    //     }
-                    // }
-                    request.SetRequestHeader("Content-Type", "application/json");
-                    request.SetRequestHeader("Accept", "application/json");
-                    if (!string.IsNullOrEmpty(authToken))
+                case "DELETE":
+                    using (UnityWebRequest request = UnityWebRequest.Delete(uri))
                     {
-                        request.SetRequestHeader("Authorization", $"Bearer {authToken}");
+                        yield return request.SendWebRequest();
+                        callback?.Invoke(request);
                     }
-
-                    yield return request.SendWebRequest();
-                    callback?.Invoke(request);
                     break;
             }
         }

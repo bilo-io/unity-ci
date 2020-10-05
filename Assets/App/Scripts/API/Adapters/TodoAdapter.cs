@@ -32,12 +32,12 @@ public class TodoAdapter : MonoBehaviour
             HandleResponse(request);
         }), null));
 
-        StartCoroutine(RestClientWebGL.PutAsync<Todo>("todos", jsonData, null, (request =>
+        StartCoroutine(RestClientWebGL.PutAsync<Todo>("todos/5f7b09a3444eed2f702e09e6", jsonData, null, (request =>
         {
             HandleResponse(request);
         }), null));
 
-        StartCoroutine(RestClientWebGL.DeleteAsync<object>("todos/notAnID", null, (request =>
+        StartCoroutine(RestClientWebGL.DeleteAsync<object>("todos/5f7b09a3444eed2f702e09e6", null, (request =>
         {
             HandleResponse(request);
         }), null));
@@ -53,7 +53,7 @@ public class TodoAdapter : MonoBehaviour
         {
             if (request.responseCode < 400)
             {
-                var json = request.downloadHandler.text;
+                var json = request?.downloadHandler?.text;
                 Debug.Log($"<color=#44FF90>({request.responseCode}) => API.SUCCESS</color>\n{json}");
             }
             else
